@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>CV Detayı</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 40px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            color: #7f8c8d;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📄 CV Detayları</h2>
+
+    <p><strong>Dosya:</strong>
+        <a href="{{ cv.file.url }}" target="_blank" class="btn">Aç</a>
+    </p>
+
+    <p><strong>Yüklenme Tarihi:</strong> {{ cv.uploaded_at }}</p>
+    <p><strong>Aday Adı:</strong> {{ cv.candidate_name|default:"(Belirtilmedi)" }}</p>
+
+    <a href="{% url 'application_analysis' %}" class="back-link">← Başvuru Listesine Dön</a>
+</div>
+</body>
+</html>

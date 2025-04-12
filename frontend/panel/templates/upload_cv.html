@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>CV Yükle</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ecf0f1;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        button {
+            background-color: #2c3e50;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #34495e;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .links a {
+            margin-right: 10px;
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📄 CV Yükle</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="cv_file" required>
+        <button type="submit">Yükle</button>
+    </form>
+
+    <h3>Yüklenen CV'ler:</h3>
+    <ul>
+        {% for file in files %}
+            <li>
+                {{ file.file.name }}
+                <span class="links">
+                    <a href="{{ file.file.url }}" target="_blank">📂 Gör</a>
+                    <form method="POST" action="{% url 'delete_cv' file.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="color: red;">Sil</button>
+                    </form>
+                </span>
+            </li>
+        {% empty %}
+            <li>Henüz CV yüklenmedi.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'dashboard' %}">← Ana Sayfaya Dön</a>
+</div>
+</body>
+</html>
