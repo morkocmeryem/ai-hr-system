@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>Dashboard</title>
-    {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,6 +30,15 @@
         .sidebar a:hover {
             background-color: #34495e;
         }
+
+        .user-info {
+            color: #bdc3c7;
+            padding: 10px 20px;
+            font-size: 14px;
+            margin-top: 30px;
+            border-top: 1px solid #7f8c8d;
+        }
+
         .content {
             margin-left: 240px;
             padding: 40px;
@@ -44,7 +54,7 @@
             text-align: center;
             margin-right: 20px;
         }
-        .card h2 {
+        .card h2, .card h3 {
             font-size: 30px;
             margin: 0;
         }
@@ -53,32 +63,98 @@
             font-size: 16px;
             color: #666;
         }
+        .chart-container {
+            max-width: 700px;
+            margin-top: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <a href="{% url 'dashboard' %}">🏠 Dashboard</a>
-        <a href="{% url 'job_management' %}">📁 İlan Yönetimi</a>
-        <a href="{% url 'application_analysis' %}">📊 Başvuru Yönetimi</a>
-        <a href="{% url 'upload_cv' %}">📄 CV Ekle</a>
+<div class="sidebar">
+    <a href="{% url 'dashboard' %}">🏠 Dashboard</a>
+    <a href="{% url 'job_management' %}">📁 İlan Yönetimi</a>
+    <a href="{% url 'application_analysis' %}">📊 Başvuru Yönetimi</a>
+    <a href="{% url 'upload_cv' %}">📄 CV Ekle</a>
+
+    <div class="user-info">
+        👤 Giriş yapan: <strong>{{ request.session.username|default:"Misafir" }}</strong><br>
+        <a href="{% url 'logout' %}" style="color: #e74c3c; font-weight: bold;">🚪 Çıkış Yap</a>
+    </div>
+</div>
+
+<div class="content">
+    <h1>Dashboard</h1>
+    <p>👋 Hoş geldin, <strong>{{ request.session.username|title }}</strong>!</p>
+
+    <div class="card">
+        <h2>{{ aktif_ilan }}</h2>
+        <p>Aktif İlanlar</p>
+    </div>
+    <div class="card">
+        <h2>{{ cv_sayisi }}</h2>
+        <p>Eklenen CV'ler</p>
+    </div>
+    <div class="card">
+        <h2>{{ uyumlu_cv }}</h2>
+        <p>Uyumlu CV'ler</p>
+    </div>
+    <div class="card">
+        <h3>{{ ortalama_skor }}%</h3>
+        <p>Ortalama Uyum Skoru</p>
     </div>
 
-    <div class="content">
-        <h1>Dashboard</h1>
-        <div class="card">
-            <h2>{{ aktif_ilan }}</h2>
-            <p>Aktif İlanlar</p>
-        </div>
-        <div class="card">
-            <h2>{{ cv_sayisi }}</h2>
-            <p>Eklenen CV'ler</p>
-        </div>
-        <div class="card">
-            <h2>{{ uyumlu_cv }}</h2>
-            <p>Uyumlu CV'ler</p>
-        </div>
+    <div class="chart-container">
+        <canvas id="cvChart" width="600" height="300"></canvas>
     </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('cvChart').getContext('2d');
+    const cvChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Toplam CV', 'Uyumlu CV', 'Ortalama Skor (%)'],
+            datasets: [{
+                label: 'Başvuru Verileri',
+                data: [
+                    {{ cv_sayisi|default:"0" }},
+                    {{ uyumlu_cv|default:"0" }},
+                    {{ ortalama_skor|default:"0" }}
+                ],
+                backgroundColor: [
+                    'rgba(52, 152, 219, 0.6)',
+                    'rgba(46, 204, 113, 0.6)',
+                    'rgba(241, 196, 15, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(41, 128, 185, 1)',
+                    'rgba(39, 174, 96, 1)',
+                    'rgba(243, 156, 18, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMin: 0.5,
+                    suggestedMax: 100
+                }
+            }
+        }
+    });
+</script>
 
 </body>
 </html>

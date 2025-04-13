@@ -16,7 +16,7 @@
             background: white;
             padding: 30px;
             border-radius: 8px;
-            max-width: 600px;
+            max-width: 700px;
             margin: auto;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -28,7 +28,7 @@
 
         p {
             font-size: 16px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .btn {
@@ -56,6 +56,26 @@
         .back-link:hover {
             text-decoration: underline;
         }
+
+        .score-box {
+            background-color: #ecf0f1;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .score-box h3 {
+            margin-top: 0;
+            color: #34495e;
+        }
+
+        .score-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #fff;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
@@ -63,11 +83,25 @@
     <h2>📄 CV Detayları</h2>
 
     <p><strong>Dosya:</strong>
-        <a href="{{ cv.file.url }}" target="_blank" class="btn">Aç</a>
+        <a href="{{ cv.file.url }}" target="_blank" class="btn">📂 Aç</a>
     </p>
 
     <p><strong>Yüklenme Tarihi:</strong> {{ cv.uploaded_at }}</p>
     <p><strong>Aday Adı:</strong> {{ cv.candidate_name|default:"(Belirtilmedi)" }}</p>
+
+    <div class="score-box">
+        <h3>🔍 İlanlarla Uyum Skoru</h3>
+        {% if matched_jobs %}
+            {% for item in matched_jobs %}
+                <div class="score-item">
+                    <strong>İlan:</strong> {{ item.job }}<br>
+                    <strong>Skor:</strong> {{ item.score }}%
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Bu CV için eşleşme bulunamadı.</p>
+        {% endif %}
+    </div>
 
     <a href="{% url 'application_analysis' %}" class="back-link">← Başvuru Listesine Dön</a>
 </div>

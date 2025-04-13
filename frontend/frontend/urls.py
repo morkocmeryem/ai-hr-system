@@ -11,7 +11,7 @@ from panel.views import (
     upload_cv_view,
     delete_cv_view,
     application_analysis_view,
-    cv_detail_view,
+    cv_detail_view, logout_view,
 )
 
 from django.conf import settings
@@ -31,6 +31,7 @@ urlpatterns = [
     path('ilan-durum/<int:id>/', toggle_job_status_view, name='toggle_job_status'),
     path('ilan-duzenle/<int:id>/', edit_job_view, name='edit_job'),
     path('cv-detay/<int:id>/', cv_detail_view, name='cv_detail'),
+    path('logout/', logout_view, name='logout'),
 
     # CV Yükleme
     path('cv-yukle/', upload_cv_view, name='upload_cv'),

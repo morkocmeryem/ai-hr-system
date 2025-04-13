@@ -3,7 +3,7 @@
 <head>
     {% load static %}
     <meta charset="UTF-8">
-    <title>Başvuru Yönetimi</title>
+    <title>Başvuru Analizi</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
         body {
@@ -38,29 +38,26 @@
             padding: 40px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .card {
             background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
+        .card h3 {
+            margin-top: 0;
+            color: #2c3e50;
         }
 
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #f9f9f9;
+        .card p {
+            margin: 8px 0;
+            line-height: 1.5;
         }
 
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -74,38 +71,21 @@
 </div>
 
 <div class="content">
-    <h2>📊 Başvuru Yönetimi</h2>
+    <h2>📊 Başvuru Analizi</h2>
 
-    <table>
-        <tr>
-            <th>Dosya Adı</th>
-            <th>Detay</th>
-        </tr>
-        {% for cv in cvs %}
-        <tr>
-        <td>
-  {% if cv.file %}
-    {{ cv.file.name }}
-  {% else %}
-    (Dosya yok)
-  {% endif %}
-</td>
-<td>
-  {% if cv.file %}
-    <a href="{{ cv.file.url }}" target="_blank">📄 Aç</a>
-  {% else %}
-    -
-  {% endif %}
-</td>
-
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="2">Henüz başvuru yapılmadı.</td>
-        </tr>
+    {% if analyzed_data %}
+        {% for item in analyzed_data %}
+        <div class="card">
+            <h3>🧳 İlan: {{ item.job }}</h3>
+            <p><strong>📄 Aday Özeti:</strong> {{ item.cv }}</p>
+            <p><strong>📊 Uyum Skoru:</strong> {{ item.score }}%</p>
+        </div>
         {% endfor %}
-    </table>
+    {% else %}
+        <p>Henüz analiz yapılmadı.</p>
+    {% endif %}
 </div>
 
 </body>
 </html>
+
